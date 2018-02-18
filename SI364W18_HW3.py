@@ -133,6 +133,8 @@ class TweetForm(FlaskForm):
         
         if len(self.username.errors) != 0 or len(self.display_name.errors) != 0:
             return False
+        else:
+            return True
 
 ##DONEDONEDONEDONE
 # TODO 364: Make sure to check out the sample application linked in the readme to check if yours is like it!
