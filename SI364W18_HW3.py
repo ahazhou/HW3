@@ -10,6 +10,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, ValidationError
 from wtforms.validators import Required, Length
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 
 ############################
 # Application configurations
@@ -77,7 +78,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True)
     display_name = db.Column(db.String(124))
-    #THE HELL IS THE LINE TO INDICATE RELATIONSHIP BETWEEN TWEET AND USER TABLES
+    #Relationship between Tweet and User tables: 1 to many => User => many Tweets
     def __repr__(self):
         return "{%s} | ID: {%s}" % (self.username, self.id)
 
@@ -159,6 +160,7 @@ def internal_server_error(e):
 ## Main route
 #############
 
+##DONEDONEDONEDONE
 ## TODO 364: Fill in the index route as described.
 
 # A template index.html has been created and provided to render what this route needs to show -- YOU just need to fill in this view function so it will work.
@@ -166,6 +168,7 @@ def internal_server_error(e):
 ## HINT: Check out the index.html template to make sure you're sending it the data it needs.
 ## We have provided comment scaffolding. Translate those comments into code properly and you'll be all set!
 
+##DONEDONEDONEDONE
 # NOTE: The index route should:
 # - Show the Tweet form.
 # - If you enter a tweet with identical text and username to an existing tweet, it should redirect you to the list of all the tweets and a message that you've already saved a tweet like that.
@@ -217,7 +220,6 @@ def index():
 
 @app.route('/all_tweets')
 def see_all_tweets():
-    pass # Replace with code
     # TODO 364: Fill in this view function so that it can successfully render the template all_tweets.html, which is provided.
     # HINT: Careful about what type the templating in all_tweets.html is expecting! It's a list of... not lists, but...
     # HINT #2: You'll have to make a query for the tweet and, based on that, another query for the username that goes with it...
@@ -232,11 +234,12 @@ def see_all_tweets():
 
 @app.route('/all_users')
 def see_all_users():
-    pass # Replace with code
+    ##DONEDONEDONEDONE
     # TODO 364: Fill in this view function so it can successfully render the template all_users.html, which is provided.
     users = User.query.all()
     return render_template("all_users.html", users=users)
 
+##DONEDONEDONEDONE
 # TODO 364
 # Create another route (no scaffolding provided) at /longest_tweet with a view function get_longest_tweet (see details below for what it should do)
 # TODO 364
@@ -254,6 +257,11 @@ def see_all_users():
 # may be useful for this problem!
 @app.route('/longest_tweet')
 def get_longest_tweet():
+    result = db.engine.execute(text("SELECT text, user_id FROM tweet WHERE length(text) = (SELECT max(length(text)) FROM tweet)"))
+    longestTweet = []
+    for row in result:
+        longestTweet = [row["text"], User.query.filter_by(id=row["user_id"]).first().username]
+    return render_template("longest_tweet.html", longestTweet=longestTweet)
 
 
 
