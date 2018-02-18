@@ -221,12 +221,21 @@ def see_all_tweets():
     # TODO 364: Fill in this view function so that it can successfully render the template all_tweets.html, which is provided.
     # HINT: Careful about what type the templating in all_tweets.html is expecting! It's a list of... not lists, but...
     # HINT #2: You'll have to make a query for the tweet and, based on that, another query for the username that goes with it...
+    all_tweets = []
+    for val in Tweet.query.all():
+        valText = val.text
+        valUser = User.query.filter_by(id=val.user_id).first().username
+        curItem = [valText, valUser]
+        all_tweets.append(curItem)
+    return render_template("all_tweets.html", all_tweets=all_tweets)
 
 
 @app.route('/all_users')
 def see_all_users():
     pass # Replace with code
     # TODO 364: Fill in this view function so it can successfully render the template all_users.html, which is provided.
+    users = User.query.all()
+    return render_template("all_users.html", users=users)
 
 # TODO 364
 # Create another route (no scaffolding provided) at /longest_tweet with a view function get_longest_tweet (see details below for what it should do)
@@ -243,6 +252,9 @@ def see_all_users():
 ## - Dictionary accumulation, the max value pattern
 ## - Sorting
 # may be useful for this problem!
+@app.route('/longest_tweet')
+def get_longest_tweet():
+
 
 
 if __name__ == '__main__':
